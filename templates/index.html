@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Squaring Calculator</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .input-section {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            margin-bottom: 0;
+        }
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .result-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        input[type="number"] {
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            width: 180px;
+            transition: border-color 0.3s;
+        }
+        input[type="number"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        #squared-result-field {
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            width: 120px;
+            background-color: #f8f9fa;
+            cursor: default;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            border: none;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .result h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 1.3em;
+        }
+        .result-item {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+        }
+        .result-label {
+            min-width: 120px;
+            font-weight: bold;
+            color: #2c3e50;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        .highlight-label {
+            background-color: #e8f5e9;
+        }
+        .result-value {
+            flex-grow: 1;
+            padding-left: 15px;
+        }
+        .stage4a-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .stage4-row {
+            display: flex;
+            gap: 20px;
+        }
+        .stage4a-textbox, .stage4b-textbox {
+            font-family: monospace;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background-color: white;
+            text-align: right;
+            min-height: 80px;
+            resize: none;
+            line-height: 1.6;
+            width: 200px;
+        }
+        .stage4a-textbox {
+            font-family: monospace;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background-color: white;
+            text-align: right;
+            min-height: 80px;
+            resize: none;
+            line-height: 1.6;
+        }
+        .error {
+            color: #dc3545;
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 6px;
+            border-left: 4px solid #dc3545;
+        }
+        .version {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: #333;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="version">v1.1.1</div>
+    <div class="container">
+        <h1>Squaring Calculator</h1>
+        <div class="input-section">
+            <div class="input-group">
+                <div class="input-field">
+                    <div class="result-label highlight-label">Enter Base Num:</div>
+                    <input type="number" id="base" min="10" max="999" placeholder="Enter number (10-999)">
+                </div>
+                <button onclick="calculate()">Square</button>
+                <div class="result-field">
+                    <div class="result-label highlight-label">Squared Result</div>
+                    <input type="text" id="squared-result-field" readonly value="-">
+                </div>
+            </div>
+            <div class="error" id="error"></div>
+        </div>
+        <div class="result">
+            <div class="result-item">
+                <div class="result-label highlight-label">Stage 1:</div>
+                <div class="result-value" id="intermediate-form">-</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label highlight-label">Stage 2:</div>
+                <div class="result-value" id="form2-expression">-</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label highlight-label">Stage 3:</div>
+                <div class="result-value" id="form3-expression">-</div>
+            </div>
+            <div class="result-item">
+                <div class="stage4-row">
+                    <div class="stage4a-container">
+                        <div class="result-label highlight-label">Stage 4a:</div>
+                        <textarea class="stage4a-textbox" id="stage4a-values" readonly>-</textarea>
+                    </div>
+                    <div class="stage4a-container">
+                        <div class="result-label highlight-label">Stage 4b:</div>
+                        <textarea class="stage4b-textbox" id="stage4b-values" readonly>-</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const base = parseInt(document.getElementById('base').value);
+            const errorDiv = document.getElementById('error');
+            
+            if (isNaN(base) || base < 10 || base > 999) {
+                errorDiv.textContent = 'Please enter a valid 2 or 3-digit number (10-999)';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            errorDiv.style.display = 'none';
+            
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ base: base })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    errorDiv.textContent = data.error;
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+                
+                document.getElementById('squared-result-field').value = data.squared_result;
+                
+                // Create the binomial expression for Stage 1
+                const term1 = data.term1;
+                const term2 = data.term2;
+                const mathExpression = `\\((${term1} ${data.sign} ${term2})^2\\)`;
+                document.getElementById('intermediate-form').innerHTML = mathExpression;
+
+                // Add Stage 2 expression
+                const form2Expression = `\\(${data.components.form2_expression}\\)`;
+                document.getElementById('form2-expression').innerHTML = form2Expression;
+
+                // Add Stage 3 expression
+                const form3Expression = `\\(${data.components.form3_expression}\\)`;
+                document.getElementById('form3-expression').innerHTML = form3Expression;
+                
+                // Add Stage 4a values
+                const stage4aLines = [
+                    `${data.components.stage4a_line1}`,
+                    `${data.sign} ${data.components.stage4a_line2}`,
+                    `${data.components.stage4a_line3}`
+                ];
+                document.getElementById('stage4a-values').value = stage4aLines.join('\n');
+                
+                // Add Stage 4b values (only if sign is negative)
+                const stage4bElement = document.getElementById('stage4b-values');
+                if (data.components.stage4b_show) {
+                    const stage4bLines = [
+                        `${data.components.stage4b_line1}`,
+                        `${data.sign} ${data.components.stage4b_line2}`,
+                        `${data.components.stage4b_line3}`,
+                        `${data.components.stage4b_line4}`
+                    ];
+                    stage4bElement.value = stage4bLines.join('\n');
+                } else {
+                    stage4bElement.value = '';
+                }
+                
+                MathJax.typeset();
+            })
+            .catch(error => {
+                errorDiv.textContent = 'An error occurred. Please try again.';
+                errorDiv.style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>
