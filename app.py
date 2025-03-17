@@ -3,7 +3,7 @@ import math
 
 app = Flask(__name__)
 
-VERSION = "v1.1.1"
+VERSION = "v1.1.2"
 
 def calculate_binomial(base):
     # Calculate components
@@ -21,7 +21,7 @@ def calculate_binomial(base):
     
     # Calculate shared components for Stage 4a and 4b
     nearest_50_squared = nearest_50 * nearest_50
-    nearest_50_squared_times_100 = nearest_50_squared * 100
+    nearest_50_squared_times_100 = nearest_50_squared
     middle_total = 2 * nearest_div_100 * difference * 100
     middle_rup = math.ceil(middle_total / 1000) * 1000  # Round up to next 1000
     middle_delta = middle_rup - middle_total
