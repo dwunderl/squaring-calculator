@@ -3,7 +3,7 @@ import math
 
 app = Flask(__name__)
 
-VERSION = "v1.1.2"
+VERSION = "v1.1.3"
 
 def calculate_binomial(base):
     # Calculate components
@@ -81,4 +81,4 @@ def calculate():
     return jsonify(result)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5012, debug=True)
+    app.run(host='0.0.0.0', port=5014, debug=True)
