@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import math
+import webbrowser
 
 app = Flask(__name__)
 

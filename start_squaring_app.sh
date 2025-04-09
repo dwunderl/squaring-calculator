@@ -33,8 +33,8 @@ echo ""
 # Start the Flask app in the background
 python3 app.py &
 
-# Wait a moment for the server to start
-sleep 2
+# Wait longer for the server to start
+sleep 4
 
 # Open the webpage in the default browser
 open "http://localhost:$PORT"
